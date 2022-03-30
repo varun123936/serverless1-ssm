@@ -1,0 +1,32 @@
+service: serverless1-ssm
+
+custom:
+  settings:
+    paramName: ${ ssm:external-api-url }
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: ap-south-1
+  environment:
+    Param_Name: ${self:custom.settings.paramName}
+  iamRoleStatements:
+  - Effect: "Allow"
+    Action:
+      - "ssm:*"
+    Resource: "*"
+
+functions:
+  Getparameters:
+    handler: handler.parameters
+    events:
+    - http:
+        path: getParameter
+        method: get
+
+#resources:
+#  Parameters:
+#    UserPoolArnParameter:
+ #     Type: AWS::SSM::Parameter::Value<String>
+  #    Default: external-api-url
+
